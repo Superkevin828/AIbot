@@ -41,6 +41,7 @@ AIbot/
 │   ├── workflow.py            # End-to-end orchestration
 │   ├── __init__.py            # Package version
 │   └── __main__.py            # `python -m pdf_workflow` entry point
+├── local_english_model/       # Separate offline GPT-style text model
 └── outputs/                   # Created automatically at runtime
 ```
 
@@ -209,6 +210,28 @@ python -m pdf_workflow document.pdf
 
 `--dry-run` still calls the LLM, but it does not send a Slack message or create
 a calendar event. It prints the formatted Slack preview and proposed meeting.
+
+## Local Transformer text model
+
+The repository also contains `local_english_model/`, a separate GPT-style
+Transformer trained from scratch on local `.txt` files. It does not use the
+`.env` file, an AI provider, or an API key.
+
+```bash
+cd local_english_model
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Add your .txt files under local_english_model/data/, then:
+python3 -m local_english_model train
+python3 -m local_english_model generate "The sun rises in the"
+python3 -m local_english_model chat
+```
+
+This is a small model, not an instruction-tuned assistant. See
+`local_english_model/README.md` for architecture, training options, and
+limitations.
 
 ## Environment variables
 
